@@ -6,8 +6,8 @@ use Interop\Container\ContainerInterface;
 
 class AnnotatedFactory extends AbstractAnnotatedFactory
 {
-    public function __invoke(ContainerInterface $container, $serviceName)
+    public function __invoke(ContainerInterface $container, $requestedName)
     {
-        return $this->processDependenciesFromAnnotations($container, $serviceName);
+        return $this->processDependenciesFromAnnotations($container, $requestedName);
     }
 }

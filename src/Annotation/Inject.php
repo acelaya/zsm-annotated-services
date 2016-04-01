@@ -8,6 +8,7 @@ use Doctrine\Common\Annotations\Annotation;
  * @author
  * @link
  * @Annotation
+ * @Target({"METHOD"})
  */
 class Inject
 {
