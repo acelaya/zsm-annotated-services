@@ -2,6 +2,8 @@
 namespace AcelayaTest\ZsmAnnotatedServices\Factory\V2;
 
 use Acelaya\ZsmAnnotatedServices\Factory\V2\AnnotatedFactory;
+use AcelayaTest\ZsmAnnotatedServices\Mock\Bar;
+use AcelayaTest\ZsmAnnotatedServices\Mock\Baz;
 use AcelayaTest\ZsmAnnotatedServices\Mock\Foo;
 use Doctrine\Common\Cache\ArrayCache;
 use PHPUnit_Framework_TestCase as TestCase;
@@ -61,5 +63,41 @@ class AnnotatedFactoryTest extends TestCase
         $this->assertEmpty($property->getValue($cache));
         $this->factory->__invoke($this->sm, 'anything', Foo::class);
         $this->assertNotEmpty($property->getValue($cache));
+    }
+
+    /**
+     * @test
+     * @expectedException \Acelaya\ZsmAnnotatedServices\Exception\RuntimeException
+     */
+    public function tryingToCreateAnInvalidClassThrowsException()
+    {
+        $this->factory->__invoke($this->sm, 'anything', 'invalid');
+    }
+
+    /**
+     * @test
+     * @expectedException \Acelaya\ZsmAnnotatedServices\Exception\RuntimeException
+     */
+    public function tryingToCreateAClassWithoutInjectAnnotationThrowsException()
+    {
+        $this->factory->__invoke($this->sm, 'anything', Bar::class);
+    }
+
+    /**
+     * @test
+     */
+    public function creatingObjectWithoutContructorJustReturnsNewInstance()
+    {
+        $instance = $this->factory->__invoke($this->sm, 'anything', \stdClass::class);
+        $this->assertInstanceOf(\stdClass::class, $instance);
+    }
+
+    /**
+     * @test
+     * @expectedException \Acelaya\ZsmAnnotatedServices\Exception\RuntimeException
+     */
+    public function tryingToInjectInvalidServiceThrowsException()
+    {
+        $this->factory->__invoke($this->sm, 'anything', Baz::class);
     }
 }

@@ -25,8 +25,13 @@ abstract class AbstractAnnotatedFactory
 
         $annotationReader = $this->createAnnotationReader($container);
         $refClass = new \ReflectionClass($serviceName);
+        $constructor = $refClass->getConstructor();
+        if (! isset($constructor)) {
+            return new $serviceName();
+        }
+        
         /** @var Inject $inject */
-        $inject = $annotationReader->getMethodAnnotation($refClass->getConstructor(), Inject::class);
+        $inject = $annotationReader->getMethodAnnotation($constructor, Inject::class);
         if (! isset($inject)) {
             throw new RuntimeException(sprintf(
                 'You need to use the "%s" annotation in your services constructors so that he "%s" factory can ' .
