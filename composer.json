@@ -1,0 +1,34 @@
+{
+    "name": "acelaya/zsm-annotated-services",
+    "description": "A component to define how dependency injection has to be performed with Zend\\ServiceManager via annotations",
+    "type": "library",
+    "require": {
+        "zendframework/zend-servicemanager": "^2.5|^3.0",
+        "container-interop/container-interop": "^1.1",
+        "doctrine/annotations": "^1.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.7",
+        "doctrine/cache": "^1.6"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alejandro Celaya",
+            "email": "alejandro@alejandrocelaya.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Acelaya\\ZsmAnnotatedServices\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AcelayaTest\\ZsmAnnotatedServices\\": "tests"
+        }
+    },
+    "suggest": {
+        "doctrine/cache": "To cache the result of processing the annotations and speed-up your application"
+    }
+}
