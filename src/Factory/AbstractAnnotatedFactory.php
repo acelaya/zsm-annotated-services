@@ -48,7 +48,7 @@ abstract class AbstractAnnotatedFactory
             $services[] = $container->get($serviceKey);
         }
 
-        // TODO use array unpacking when dropping PHP 5.5 support instead of reflection
+        // TODO use array unpacking instead of reflection when dropping PHP 5.5 support
         // return new $serviceName(...$services);
         return $refClass->newInstanceArgs($services);
     }
