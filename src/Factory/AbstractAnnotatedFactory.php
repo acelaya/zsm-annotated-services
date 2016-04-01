@@ -38,7 +38,7 @@ abstract class AbstractAnnotatedFactory
 
         $services = [];
         foreach ($inject->getServices() as $serviceKey) {
-            if (! $container->has($serviceName)) {
+            if (! $container->has($serviceKey)) {
                 throw new RuntimeException(sprintf(
                     'Defined injectable service "%s" could not be found in container.',
                     $serviceKey
@@ -50,7 +50,7 @@ abstract class AbstractAnnotatedFactory
 
         // TODO use array unpacking when dropping PHP 5.5 support instead of reflection
         // return new $serviceName(...$services);
-        return $refClass->newInstance($services);
+        return $refClass->newInstanceArgs($services);
     }
 
     private function createAnnotationReader(ContainerInterface $container)

@@ -1,6 +1,8 @@
 <?php
 namespace AcelayaTest\ZsmAnnotatedServices\Mock;
 
+use Acelaya\ZsmAnnotatedServices\Annotation\Inject;
+
 /**
  * Class Foo
  * @author
@@ -8,14 +10,18 @@ namespace AcelayaTest\ZsmAnnotatedServices\Mock;
  */
 class Foo
 {
+    public $foo;
+    public $bar;
+
     /**
      * Foo constructor.
      * @param $foo
      * @param $bar
-     * @\Acelaya\ZsmAnnotatedServices\Annotation\Inject({AnnotationReader::class, "serviceB"})
+     * @Inject({"serviceA", "serviceB"})
      */
     public function __construct($foo, $bar)
     {
-
+        $this->foo = $foo;
+        $this->bar = $bar;
     }
 }
