@@ -1,5 +1,12 @@
 # Zend\ServiceManager Annotated Services
 
+[![Build Status](https://travis-ci.org/acelaya/zsm-annotated-services.svg?branch=master)](https://travis-ci.org/acelaya/zsm-annotated-services)
+[![Code Coverage](https://scrutinizer-ci.com/g/acelaya/zsm-annotated-services/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/acelaya/zsm-annotated-services/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/acelaya/zsm-annotated-services/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/acelaya/zsm-annotated-services/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/acelaya/zsm-annotated-services/v/stable.png)](https://packagist.org/packages/acelaya/zsm-annotated-services)
+[![Total Downloads](https://poser.pugx.org/acelaya/zsm-annotated-services/downloads.png)](https://packagist.org/packages/acelaya/zsm-annotated-services)
+[![License](https://poser.pugx.org/acelaya/zsm-annotated-services/license.png)](https://packagist.org/packages/acelaya/zsm-annotated-services)
+
 If you are tired of defining lots of factories in your projects just to fetch some dependencies from the ServiceManager and the create a new service instance that gets those dependencies injected, try this.
 
 It is a component that allows to define how dependency injection has to be performed with Zend\ServiceManager via annotations.
