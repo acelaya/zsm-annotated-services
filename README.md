@@ -56,7 +56,7 @@ And then, register the service with one of the provided factories (There is one 
 
 ```php
 use Acelaya\MyService;
-use Acelaya\ZsmAnnotatedServices\Factory\V3\AnnotatedFactory,
+use Acelaya\ZsmAnnotatedServices\Factory\V3\AnnotatedFactory;
 use Zend\ServiceManager\ServiceManager;
 
 $sm = new ServiceManager([
