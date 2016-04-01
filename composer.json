@@ -2,6 +2,15 @@
     "name": "acelaya/zsm-annotated-services",
     "description": "A component to define how dependency injection has to be performed with Zend\\ServiceManager via annotations",
     "type": "library",
+    "keywords": [
+        "annotations",
+        "services",
+        "factories",
+        "container",
+        "zf2",
+        "zf3",
+        "service-manager"
+    ],
     "require": {
         "zendframework/zend-servicemanager": "^2.5|^3.0",
         "container-interop/container-interop": "^1.1",
