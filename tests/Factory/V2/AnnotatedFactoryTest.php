@@ -1,6 +1,7 @@
 <?php
 namespace AcelayaTest\ZsmAnnotatedServices\Factory\V2;
 
+use Acelaya\ZsmAnnotatedServices\Factory\AbstractAnnotatedFactory;
 use Acelaya\ZsmAnnotatedServices\Factory\V2\AnnotatedFactory;
 use AcelayaTest\ZsmAnnotatedServices\Mock\Bar;
 use AcelayaTest\ZsmAnnotatedServices\Mock\Baz;
@@ -54,11 +55,18 @@ class AnnotatedFactoryTest extends TestCase
      */
     public function annotationsAreCachedWhenCacheServiceExists()
     {
+        // Create a cache service
         $cache = new ArrayCache();
         $class = new \ReflectionClass(ArrayCache::class);
         $property = $class->getProperty('data');
         $property->setAccessible(true);
         $this->sm->setService(AnnotatedFactory::CACHE_SERVICE, $cache);
+
+        // Unset the shared annotation reader, so that it is created again
+        $class = new \ReflectionClass(AbstractAnnotatedFactory::class);
+        $annotationreader = $class->getProperty('annotationReader');
+        $annotationreader->setAccessible(true);
+        $annotationreader->setValue(null);
 
         $this->assertEmpty($property->getValue($cache));
         $this->factory->__invoke($this->sm, 'anything', Foo::class);
