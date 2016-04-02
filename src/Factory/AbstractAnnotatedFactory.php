@@ -13,6 +13,11 @@ abstract class AbstractAnnotatedFactory
 {
     const CACHE_SERVICE = 'Acelaya\ZsmAnnotatedServices\Cache';
 
+    /**
+     * @var AnnotationReader
+     */
+    private static $annotationReader;
+
     protected function processDependenciesFromAnnotations(ServiceLocatorInterface $container, $serviceName)
     {
         if (! class_exists($serviceName)) {
@@ -29,7 +34,7 @@ abstract class AbstractAnnotatedFactory
         if (! isset($constructor)) {
             return new $serviceName();
         }
-        
+
         /** @var Inject $inject */
         $inject = $annotationReader->getMethodAnnotation($constructor, Inject::class);
         if (! isset($inject)) {
@@ -58,8 +63,16 @@ abstract class AbstractAnnotatedFactory
         return $refClass->newInstanceArgs($services);
     }
 
+    /**
+     * @param ServiceLocatorInterface $container
+     * @return AnnotationReader|CachedReader
+     */
     private function createAnnotationReader(ServiceLocatorInterface $container)
     {
+        if (isset(self::$annotationReader)) {
+            return self::$annotationReader;
+        }
+
         AnnotationRegistry::registerLoader(function ($class) {
             $file = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
             $file = realpath(__DIR__ . '/../Annotation/' . basename($file));
@@ -70,13 +83,13 @@ abstract class AbstractAnnotatedFactory
             require_once $file;
             return true;
         });
-        
+
         if (! $container->has(self::CACHE_SERVICE)) {
-            return new AnnotationReader();
+            return self::$annotationReader = new AnnotationReader();
         } else {
             /** @var Cache $cache */
             $cache = $container->get(self::CACHE_SERVICE);
-            return new CachedReader(new AnnotationReader(), $cache);
+            return self::$annotationReader = new CachedReader(new AnnotationReader(), $cache);
         }
     }
 }
