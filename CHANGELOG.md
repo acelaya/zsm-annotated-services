@@ -1,5 +1,11 @@
 ## CHANGELOG
 
+### 0.1.2
+
+**Bugs**
+
+* [2: Make the AnnotationReader to be shared between factories](https://github.com/acelaya/zsm-annotated-services/issues/2)
+
 ### 0.1.1
 
 **Enhancements:**
