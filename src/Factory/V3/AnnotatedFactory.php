@@ -2,11 +2,11 @@
 namespace Acelaya\ZsmAnnotatedServices\Factory\V3;
 
 use Acelaya\ZsmAnnotatedServices\Factory\AbstractAnnotatedFactory;
-use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 class AnnotatedFactory extends AbstractAnnotatedFactory
 {
-    public function __invoke(ContainerInterface $container, $requestedName)
+    public function __invoke(ServiceLocatorInterface $container, $requestedName)
     {
         return $this->processDependenciesFromAnnotations($container, $requestedName);
     }

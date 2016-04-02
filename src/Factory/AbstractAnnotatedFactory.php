@@ -7,13 +7,13 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\Cache;
-use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 abstract class AbstractAnnotatedFactory
 {
     const CACHE_SERVICE = 'Acelaya\ZsmAnnotatedServices\Cache';
 
-    protected function processDependenciesFromAnnotations(ContainerInterface $container, $serviceName)
+    protected function processDependenciesFromAnnotations(ServiceLocatorInterface $container, $serviceName)
     {
         if (! class_exists($serviceName)) {
             throw new RuntimeException(sprintf(
@@ -58,7 +58,7 @@ abstract class AbstractAnnotatedFactory
         return $refClass->newInstanceArgs($services);
     }
 
-    private function createAnnotationReader(ContainerInterface $container)
+    private function createAnnotationReader(ServiceLocatorInterface $container)
     {
         AnnotationRegistry::registerLoader(function ($class) {
             $file = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';

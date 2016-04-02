@@ -12,8 +12,7 @@
         "service-manager"
     ],
     "require": {
-        "zendframework/zend-servicemanager": "^2.6|^3.0",
-        "container-interop/container-interop": "^1.1",
+        "zendframework/zend-servicemanager": "^2.2|^3.0",
         "doctrine/annotations": "^1.2"
     },
     "require-dev": {
