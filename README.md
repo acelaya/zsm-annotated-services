@@ -17,7 +17,7 @@ Install this component with composer.
 
     composer require acelaya/zsm-annotated-services
 
-### Basic ussage
+### Basic usage
 
 The traditional process is that you need to create a factory for each new service. Maybe sometimes you can reuse certain factories or abstract factories, but it is not the usual case.
 
