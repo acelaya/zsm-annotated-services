@@ -14,7 +14,7 @@ abstract class AbstractAnnotatedFactory
     const CACHE_SERVICE = 'Acelaya\ZsmAnnotatedServices\Cache';
 
     /**
-     * @var AnnotationReader
+     * @var AnnotationReader|CachedReader
      */
     private static $annotationReader;
 
