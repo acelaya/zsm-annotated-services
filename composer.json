@@ -12,6 +12,7 @@
         "service-manager"
     ],
     "require": {
+        "php": "^5.5|^7.0",
         "zendframework/zend-servicemanager": "^2.2|^3.0",
         "doctrine/annotations": "^1.2"
     },

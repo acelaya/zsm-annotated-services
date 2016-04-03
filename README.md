@@ -32,7 +32,7 @@ class MyFactory
     {
         $foo = $container->get(Foo::class);
         $bar = $container->get('bar');
-        
+
         return new MyService($foo, $bar);
     }
 }
@@ -54,7 +54,7 @@ class MyService
     {
         // [...]
     }
-    
+
     // [...]
 }
 ```
@@ -79,12 +79,12 @@ You just need to replace `Acelaya\ZsmAnnotatedServices\Factory\V3\AnnotatedFacto
 
 That looks cool, but processing annotations takes time. If you use this approach with several services, you will see your application's performance reduced.
 
-That's why this library allows to use Doctrine\Cache adapters in order to cache te result of processing annotations.
+That's why this library allows to use Doctrine\Cache adapters in order to cache the result of processing annotations.
 
 First install the cache component.
 
     composer require doctrine/cache
-    
+
 Then register another service which returns a `Doctrine\Common\Cache\Cache` instance with the key `Acelaya\ZsmAnnotatedServices\Factory\AbstractAnnotatedFactory::CACHE_SERVICE` (or just "Acelaya\ZsmAnnotatedServices\Cache", which is the value of the constant).
 
-By doing this, your annotations will be processed and cached, improving performance for subsecuent requests.
+By doing this, your annotations will be processed and cached, improving performance for subsequent requests.
