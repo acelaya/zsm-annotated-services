@@ -39,10 +39,10 @@ abstract class AbstractAnnotatedFactory
         $inject = $annotationReader->getMethodAnnotation($constructor, Inject::class);
         if (! isset($inject)) {
             throw new RuntimeException(sprintf(
-                'You need to use the "%s" annotation in your services constructors so that he "%s" factory can ' .
-                'create them.',
-                static::class,
-                Inject::class
+                'You need to use the "%s" annotation in "%s" constructor so that the "%s" can create it.',
+                Inject::class,
+                $serviceName,
+                static::class
             ));
         }
 
