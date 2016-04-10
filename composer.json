@@ -40,5 +40,14 @@
     },
     "suggest": {
         "doctrine/cache": "To cache the result of processing the annotations and speed-up your application"
+    },
+    "scripts": {
+        "test": "phpunit --coverage-clover build/clover.xml",
+        "html-test": "phpunit --coverage-html build/html",
+        "cs": "phpcs --standard=PSR2 ./src ./tests",
+        "check": [
+            "@test",
+            "@cs"
+        ]
     }
 }
