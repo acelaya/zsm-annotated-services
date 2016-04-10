@@ -27,6 +27,11 @@ class AnnotatedFactoryTest extends TestCase
         $this->sm = new ServiceManager(['services' => [
             'serviceA' => 'foo_service',
             'serviceB' => ['bar_service'],
+            'config' => [
+                'foo' => [
+                    'bar' => 'Hello World',
+                ],
+            ],
         ]]);
     }
 
@@ -48,6 +53,7 @@ class AnnotatedFactoryTest extends TestCase
         $instance = $this->factory->__invoke($this->sm, 'anything', Foo::class);
         $this->assertEquals($this->sm->get('serviceA'), $instance->foo);
         $this->assertEquals($this->sm->get('serviceB'), $instance->bar);
+        $this->assertEquals($this->sm->get('config')['foo']['bar'], $instance->helloWorld);
     }
 
     /**
@@ -107,5 +113,13 @@ class AnnotatedFactoryTest extends TestCase
     public function tryingToInjectInvalidServiceThrowsException()
     {
         $this->factory->__invoke($this->sm, 'anything', Baz::class);
+    }
+
+    /**
+     * @test
+     */
+    public function dottedNottationFetchesArrayKeys()
+    {
+
     }
 }

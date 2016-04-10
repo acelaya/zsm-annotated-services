@@ -22,6 +22,11 @@ class AnnotatedFactoryTest extends TestCase
         $sm = new ServiceManager(['services' => [
             'serviceA' => 'foo_service',
             'serviceB' => ['bar_service'],
+            'config' => [
+                'foo' => [
+                    'bar' => 'Hello World',
+                ],
+            ],
         ]]);
 
         $instance = $this->factory->__invoke($sm, Foo::class);
