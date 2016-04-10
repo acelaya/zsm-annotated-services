@@ -13,13 +13,11 @@ php:
 
 before_script:
   - composer self-update
-  - composer --version
   - composer install --no-interaction
 
 script:
   - mkdir build
-  - ./vendor/bin/phpunit --coverage-clover build/clover.xml
-  - ./vendor/bin/phpcs --standard=PSR2 ./src ./tests
+  - composer check
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar

@@ -88,3 +88,56 @@ First install the cache component.
 Then register another service which returns a `Doctrine\Common\Cache\Cache` instance with the key `Acelaya\ZsmAnnotatedServices\Factory\AbstractAnnotatedFactory::CACHE_SERVICE` (or just "Acelaya\ZsmAnnotatedServices\Cache", which is the value of the constant).
 
 By doing this, your annotations will be processed and cached, improving performance for subsequent requests.
+
+### Dot notation for array services
+
+When you need to inject just one part of a service which contains an array, you can use the dot notation, where the first part is the service name and the rest of the parts are the keys to fetch from the array.
+
+For example, imagine this services specification:
+
+```php
+use Acelaya\MyService;
+use Acelaya\ZsmAnnotatedServices\Factory\V3\AnnotatedFactory;
+use Zend\ServiceManager\ServiceManager;
+
+$sm = new ServiceManager([
+    'services' => [
+        'config' => [
+            'mail' => [
+                'smtp' => [
+                    // [...]
+                ],
+                'from' => 'foo@bar.com',
+                'subject' => 'Welcome!',
+            ],
+            'logger' => [
+                'file' => '/var/log/my_log.log'
+            ],
+        ],
+    ],
+    'factories' => [
+        MyService::class => AnnotatedFactory::class,
+    ],
+]);
+```
+
+And this service with the `@Inject` annotation:
+
+```php
+namespace Acelaya;
+
+use Acelaya\ZsmAnnotatedServices\Annotation\Inject;
+
+class MyService
+{
+    /**
+     * @Inject({"config.mail.smtp"})
+     */
+    public function __construct(array $smtp)
+    {
+        // [...]
+    }
+}
+```
+
+The injectable service is defined by **config.mail.smtp**. In this case, the `AnnotatedFactory` will assume that the service name is **config**, and that it contains an associative array. Then, it will use the rest of the dotted parts as nested keys in that array, and finally get the last value and inject it in the service.

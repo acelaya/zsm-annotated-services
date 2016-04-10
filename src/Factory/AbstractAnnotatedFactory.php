@@ -6,6 +6,7 @@ use Acelaya\ZsmAnnotatedServices\Exception\RuntimeException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -14,7 +15,7 @@ abstract class AbstractAnnotatedFactory
     const CACHE_SERVICE = 'Acelaya\ZsmAnnotatedServices\Cache';
 
     /**
-     * @var AnnotationReader|CachedReader
+     * @var Reader
      */
     private static $annotationReader;
 
@@ -48,6 +49,9 @@ abstract class AbstractAnnotatedFactory
 
         $services = [];
         foreach ($inject->getServices() as $serviceKey) {
+            $parts = explode('.', $serviceKey);
+            $serviceKey = array_shift($parts);
+
             if (! $container->has($serviceKey)) {
                 throw new RuntimeException(sprintf(
                     'Defined injectable service "%s" could not be found in container.',
@@ -55,7 +59,8 @@ abstract class AbstractAnnotatedFactory
                 ));
             }
 
-            $services[] = $container->get($serviceKey);
+            $service = $container->get($serviceKey);
+            $services[] = empty($parts) ? $service : $this->readKeysFromArray($parts, $service);
         }
 
         // TODO use array unpacking instead of reflection when dropping PHP 5.5 support
@@ -91,5 +96,21 @@ abstract class AbstractAnnotatedFactory
             $cache = $container->get(self::CACHE_SERVICE);
             return self::$annotationReader = new CachedReader(new AnnotationReader(), $cache);
         }
+    }
+
+    /**
+     * @param array $keys
+     * @param array $array
+     * @return mixed|null
+     */
+    private function readKeysFromArray(array $keys, array $array)
+    {
+        $key = array_shift($keys);
+        $value = isset($array[$key]) ? $array[$key] : null;
+        if (! empty($keys) && is_array($value)) {
+            $value = $this->readKeysFromArray($keys, $value);
+        }
+
+        return $value;
     }
 }

@@ -12,16 +12,19 @@ class Foo
 {
     public $foo;
     public $bar;
+    public $helloWorld;
 
     /**
      * Foo constructor.
      * @param $foo
      * @param $bar
-     * @Inject({"serviceA", "serviceB"})
+     * @param $helloWorld
+     * @Inject({"serviceA", "serviceB", "config.foo.bar"})
      */
-    public function __construct($foo, $bar)
+    public function __construct($foo, $bar, $helloWorld)
     {
         $this->foo = $foo;
         $this->bar = $bar;
+        $this->helloWorld = $helloWorld;
     }
 }
