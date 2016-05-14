@@ -131,13 +131,13 @@ use Acelaya\ZsmAnnotatedServices\Annotation\Inject;
 class MyService
 {
     /**
-     * @Inject({"config.mail.smtp"})
+     * @Inject({"config.mail.from"})
      */
-    public function __construct(array $smtp)
+    public function __construct($from)
     {
-        // [...]
+        // The value of $from will be 'foo@bar.com'
     }
 }
 ```
 
-The injectable service is defined by **config.mail.smtp**. In this case, the `AnnotatedFactory` will assume that the service name is **config**, and that it contains an associative array. Then, it will use the rest of the dotted parts as nested keys in that array, and finally get the last value and inject it in the service.
+The injectable service is defined by **config.mail.from**. In this case, the `AnnotatedFactory` will assume that the service name is **config**, and that it contains an associative array. Then, it will use the rest of the dotted parts as nested keys in that array, and finally get the last value and inject it in the service.
