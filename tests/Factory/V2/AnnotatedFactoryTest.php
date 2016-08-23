@@ -114,12 +114,4 @@ class AnnotatedFactoryTest extends TestCase
     {
         $this->factory->__invoke($this->sm, 'anything', Baz::class);
     }
-
-    /**
-     * @test
-     */
-    public function dottedNottationFetchesArrayKeys()
-    {
-
-    }
 }
