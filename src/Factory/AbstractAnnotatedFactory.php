@@ -63,14 +63,12 @@ abstract class AbstractAnnotatedFactory
             $services[] = empty($parts) ? $service : $this->readKeysFromArray($parts, $service);
         }
 
-        // TODO use array unpacking instead of reflection when dropping PHP 5.5 support
-        // return new $serviceName(...$services);
-        return $refClass->newInstanceArgs($services);
+        return new $serviceName(...$services);
     }
 
     /**
      * @param ServiceLocatorInterface $container
-     * @return AnnotationReader|CachedReader
+     * @return Reader
      */
     private function createAnnotationReader(ServiceLocatorInterface $container)
     {
