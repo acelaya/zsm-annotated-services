@@ -2,7 +2,7 @@
 namespace Acelaya\ZsmAnnotatedServices\Factory;
 
 use Acelaya\ZsmAnnotatedServices\Annotation\Inject;
-use Acelaya\ZsmAnnotatedServices\Exception\RuntimeException;
+use Acelaya\ZsmAnnotatedServices\Exception;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
@@ -22,7 +22,7 @@ abstract class AbstractAnnotatedFactory
     protected function processDependenciesFromAnnotations(ServiceLocatorInterface $container, $serviceName)
     {
         if (! class_exists($serviceName)) {
-            throw new RuntimeException(sprintf(
+            throw new Exception\RuntimeException(sprintf(
                 'Annotated factories can only be used with services that are identified by their FQCN. ' .
                 'Provided "%s" service name is not a valid class.',
                 $serviceName
@@ -39,7 +39,7 @@ abstract class AbstractAnnotatedFactory
         /** @var Inject $inject */
         $inject = $annotationReader->getMethodAnnotation($constructor, Inject::class);
         if (! isset($inject)) {
-            throw new RuntimeException(sprintf(
+            throw new Exception\RuntimeException(sprintf(
                 'You need to use the "%s" annotation in "%s" constructor so that the "%s" can create it.',
                 Inject::class,
                 $serviceName,
@@ -60,7 +60,7 @@ abstract class AbstractAnnotatedFactory
             }
 
             if (! $container->has($serviceKey)) {
-                throw new RuntimeException(sprintf(
+                throw new Exception\RuntimeException(sprintf(
                     'Defined injectable service "%s" could not be found in container.',
                     $serviceKey
                 ));
@@ -111,7 +111,16 @@ abstract class AbstractAnnotatedFactory
     private function readKeysFromArray(array $keys, array $array)
     {
         $key = array_shift($keys);
-        $value = isset($array[$key]) ? $array[$key] : null;
+
+        // When one of the provided keys is not found, thorw an exception
+        if (! isset($array[$key])) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'The key "%s" provided in the dotted notation could not be found in the array service',
+                $key
+            ));
+        }
+
+        $value = $array[$key];
         if (! empty($keys) && is_array($value)) {
             $value = $this->readKeysFromArray($keys, $value);
         }
