@@ -3,9 +3,7 @@ namespace AcelayaTest\ZsmAnnotatedServices\Factory\V2;
 
 use Acelaya\ZsmAnnotatedServices\Factory\AbstractAnnotatedFactory;
 use Acelaya\ZsmAnnotatedServices\Factory\V2\AnnotatedFactory;
-use AcelayaTest\ZsmAnnotatedServices\Mock\Bar;
-use AcelayaTest\ZsmAnnotatedServices\Mock\Baz;
-use AcelayaTest\ZsmAnnotatedServices\Mock\Foo;
+use AcelayaTest\ZsmAnnotatedServices\Mock;
 use Doctrine\Common\Cache\ArrayCache;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ServiceManager\ServiceManager;
@@ -31,7 +29,9 @@ class AnnotatedFactoryTest extends TestCase
                 'foo' => [
                     'bar' => 'Hello World',
                 ],
+                'something' => [],
             ],
+            'dotted.service.which.is.not.array' => new \stdClass(),
         ]]);
     }
 
@@ -40,8 +40,8 @@ class AnnotatedFactoryTest extends TestCase
      */
     public function serviceIsCreated()
     {
-        $instance = $this->factory->__invoke($this->sm, 'anything', Foo::class);
-        $this->assertInstanceOf(Foo::class, $instance);
+        $instance = $this->factory->__invoke($this->sm, 'anything', Mock\Foo::class);
+        $this->assertInstanceOf(Mock\Foo::class, $instance);
     }
 
     /**
@@ -49,11 +49,12 @@ class AnnotatedFactoryTest extends TestCase
      */
     public function dependenciesAreInjected()
     {
-        /** @var Foo $instance */
-        $instance = $this->factory->__invoke($this->sm, 'anything', Foo::class);
+        /** @var Mock\Foo $instance */
+        $instance = $this->factory->__invoke($this->sm, 'anything', Mock\Foo::class);
         $this->assertEquals($this->sm->get('serviceA'), $instance->foo);
         $this->assertEquals($this->sm->get('serviceB'), $instance->bar);
         $this->assertEquals($this->sm->get('config')['foo']['bar'], $instance->helloWorld);
+        $this->assertSame($this->sm->get('dotted.service.which.is.not.array'), $instance->dottedService);
     }
 
     /**
@@ -75,7 +76,7 @@ class AnnotatedFactoryTest extends TestCase
         $annotationreader->setValue(null);
 
         $this->assertEmpty($property->getValue($cache));
-        $this->factory->__invoke($this->sm, 'anything', Foo::class);
+        $this->factory->__invoke($this->sm, 'anything', Mock\Foo::class);
         $this->assertNotEmpty($property->getValue($cache));
     }
 
@@ -94,7 +95,7 @@ class AnnotatedFactoryTest extends TestCase
      */
     public function tryingToCreateAClassWithoutInjectAnnotationThrowsException()
     {
-        $this->factory->__invoke($this->sm, 'anything', Bar::class);
+        $this->factory->__invoke($this->sm, 'anything', Mock\Bar::class);
     }
 
     /**
@@ -112,6 +113,15 @@ class AnnotatedFactoryTest extends TestCase
      */
     public function tryingToInjectInvalidServiceThrowsException()
     {
-        $this->factory->__invoke($this->sm, 'anything', Baz::class);
+        $this->factory->__invoke($this->sm, 'anything', Mock\Baz::class);
+    }
+
+    /**
+     * @test
+     * @expectedException \Acelaya\ZsmAnnotatedServices\Exception\InvalidArgumentException
+     */
+    public function dependingOnAnArrayWithInvalidKeysThrowsException()
+    {
+        $this->factory->__invoke($this->sm, 'anything', Mock\FooBar::class);
     }
 }
