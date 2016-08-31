@@ -27,6 +27,7 @@ class AnnotatedFactoryTest extends TestCase
                     'bar' => 'Hello World',
                 ],
             ],
+            'dotted.service.which.is.not.array' => new \stdClass(),
         ]]);
 
         $instance = $this->factory->__invoke($sm, Foo::class);

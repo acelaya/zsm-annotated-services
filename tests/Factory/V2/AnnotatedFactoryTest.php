@@ -32,6 +32,7 @@ class AnnotatedFactoryTest extends TestCase
                     'bar' => 'Hello World',
                 ],
             ],
+            'dotted.service.which.is.not.array' => new \stdClass(),
         ]]);
     }
 
@@ -54,6 +55,7 @@ class AnnotatedFactoryTest extends TestCase
         $this->assertEquals($this->sm->get('serviceA'), $instance->foo);
         $this->assertEquals($this->sm->get('serviceB'), $instance->bar);
         $this->assertEquals($this->sm->get('config')['foo']['bar'], $instance->helloWorld);
+        $this->assertSame($this->sm->get('dotted.service.which.is.not.array'), $instance->dottedService);
     }
 
     /**

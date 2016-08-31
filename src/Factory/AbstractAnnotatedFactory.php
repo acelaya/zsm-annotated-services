@@ -50,7 +50,14 @@ abstract class AbstractAnnotatedFactory
         $services = [];
         foreach ($inject->getServices() as $serviceKey) {
             $parts = explode('.', $serviceKey);
-            $serviceKey = array_shift($parts);
+
+            // Even when dots are found, try to fetch the service with all the name
+            // If it is not found, the assume dots are used to get part of an array service
+            if (count($parts) > 1 && ! $container->has($serviceKey)) {
+                $serviceKey = array_shift($parts);
+            } else {
+                $parts = [];
+            }
 
             if (! $container->has($serviceKey)) {
                 throw new RuntimeException(sprintf(
