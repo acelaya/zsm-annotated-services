@@ -14,6 +14,7 @@ class Foo
     public $bar;
     public $helloWorld;
     public $dottedService;
+    public $dottedArrayAccess;
 
     /**
      * Foo constructor.
@@ -21,13 +22,21 @@ class Foo
      * @param $bar
      * @param $helloWorld
      * @param $dottedService
-     * @Inject({"serviceA", "serviceB", "config.foo.bar", "dotted.service.which.is.not.array"})
+     * @param $dottedArrayAccess
+     * @Inject({
+     *     "serviceA",
+     *     "serviceB",
+     *     "config.foo.bar",
+     *     "dotted.service.which.is.not.array",
+     *     "config.dotted.array.access"
+     * })
      */
-    public function __construct($foo, $bar, $helloWorld, $dottedService)
+    public function __construct($foo, $bar, $helloWorld, $dottedService, $dottedArrayAccess)
     {
         $this->foo = $foo;
         $this->bar = $bar;
         $this->helloWorld = $helloWorld;
         $this->dottedService = $dottedService;
+        $this->dottedArrayAccess = $dottedArrayAccess;
     }
 }

@@ -30,6 +30,11 @@ class AnnotatedFactoryTest extends TestCase
                     'bar' => 'Hello World',
                 ],
                 'something' => [],
+                'dotted' => new \ArrayObject([
+                    'array' => [
+                        'access' => 'dotted array access',
+                    ],
+                ]),
             ],
             'dotted.service.which.is.not.array' => new \stdClass(),
         ]]);
@@ -123,5 +128,15 @@ class AnnotatedFactoryTest extends TestCase
     public function dependingOnAnArrayWithInvalidKeysThrowsException()
     {
         $this->factory->__invoke($this->sm, 'anything', Mock\FooBar::class);
+    }
+
+    /**
+     * @test
+     */
+    public function arrayAccessObjectsAreProcessedInDottedNotation()
+    {
+        /** @var Mock\Foo $foo */
+        $foo = $this->factory->__invoke($this->sm, 'anything', Mock\Foo::class);
+        $this->assertEquals('dotted array access', $foo->dottedArrayAccess);
     }
 }

@@ -54,8 +54,8 @@ abstract class AbstractAnnotatedFactory
         foreach ($inject->getServices() as $serviceKey) {
             $parts = explode('.', $serviceKey);
 
-            // Even when dots are found, try to fetch the service with all the name
-            // If it is not found, the assume dots are used to get part of an array service
+            // Even when dots are found, try to find a service with the full name
+            // If it is not found, then assume dots are used to get part of an array service
             if (count($parts) > 1 && ! $container->has($serviceKey)) {
                 $serviceKey = array_shift($parts);
             } else {
@@ -102,11 +102,11 @@ abstract class AbstractAnnotatedFactory
 
     /**
      * @param array $keys
-     * @param array $array
+     * @param array|\ArrayAccess $array
      * @return mixed|null
      * @throws InvalidArgumentException
      */
-    private function readKeysFromArray(array $keys, array $array)
+    private function readKeysFromArray(array $keys, $array)
     {
         $key = array_shift($keys);
 
@@ -119,7 +119,7 @@ abstract class AbstractAnnotatedFactory
         }
 
         $value = $array[$key];
-        if (! empty($keys) && is_array($value)) {
+        if (! empty($keys) && (is_array($value) || $value instanceof \ArrayAccess)) {
             $value = $this->readKeysFromArray($keys, $value);
         }
 
