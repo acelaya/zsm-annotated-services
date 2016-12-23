@@ -3,11 +3,14 @@ namespace Acelaya\ZsmAnnotatedServices\Factory;
 
 use Acelaya\ZsmAnnotatedServices\Annotation\Inject;
 use Acelaya\ZsmAnnotatedServices\Exception;
+use Acelaya\ZsmAnnotatedServices\Exception\InvalidArgumentException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
+use Interop\Container\Exception\ContainerException;
+use Interop\Container\Exception\NotFoundException;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 abstract class AbstractAnnotatedFactory
@@ -32,13 +35,13 @@ abstract class AbstractAnnotatedFactory
         $annotationReader = $this->createAnnotationReader($container);
         $refClass = new \ReflectionClass($serviceName);
         $constructor = $refClass->getConstructor();
-        if (! isset($constructor)) {
+        if ($constructor === null) {
             return new $serviceName();
         }
 
         /** @var Inject $inject */
         $inject = $annotationReader->getMethodAnnotation($constructor, Inject::class);
-        if (! isset($inject)) {
+        if ($inject === null) {
             throw new Exception\RuntimeException(sprintf(
                 'You need to use the "%s" annotation in "%s" constructor so that the "%s" can create it.',
                 Inject::class,
@@ -51,8 +54,8 @@ abstract class AbstractAnnotatedFactory
         foreach ($inject->getServices() as $serviceKey) {
             $parts = explode('.', $serviceKey);
 
-            // Even when dots are found, try to fetch the service with all the name
-            // If it is not found, the assume dots are used to get part of an array service
+            // Even when dots are found, try to find a service with the full name
+            // If it is not found, then assume dots are used to get part of an array service
             if (count($parts) > 1 && ! $container->has($serviceKey)) {
                 $serviceKey = array_shift($parts);
             } else {
@@ -76,23 +79,17 @@ abstract class AbstractAnnotatedFactory
     /**
      * @param ServiceLocatorInterface $container
      * @return Reader
+     * @throws NotFoundException
+     * @throws ContainerException
+     * @throws \InvalidArgumentException
      */
     private function createAnnotationReader(ServiceLocatorInterface $container)
     {
-        if (isset(self::$annotationReader)) {
+        if (self::$annotationReader !== null) {
             return self::$annotationReader;
         }
 
-        AnnotationRegistry::registerLoader(function ($class) {
-            $file = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
-            $file = realpath(__DIR__ . '/../Annotation/' . basename($file));
-            if (! $file) {
-                return false;
-            }
-
-            require_once $file;
-            return true;
-        });
+        AnnotationRegistry::registerLoader('class_exists');
 
         if (! $container->has(self::CACHE_SERVICE)) {
             return self::$annotationReader = new AnnotationReader();
@@ -105,23 +102,24 @@ abstract class AbstractAnnotatedFactory
 
     /**
      * @param array $keys
-     * @param array $array
+     * @param array|\ArrayAccess $array
      * @return mixed|null
+     * @throws InvalidArgumentException
      */
-    private function readKeysFromArray(array $keys, array $array)
+    private function readKeysFromArray(array $keys, $array)
     {
         $key = array_shift($keys);
 
         // When one of the provided keys is not found, thorw an exception
         if (! isset($array[$key])) {
-            throw new Exception\InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'The key "%s" provided in the dotted notation could not be found in the array service',
                 $key
             ));
         }
 
         $value = $array[$key];
-        if (! empty($keys) && is_array($value)) {
+        if (! empty($keys) && (is_array($value) || $value instanceof \ArrayAccess)) {
             $value = $this->readKeysFromArray($keys, $value);
         }
 

@@ -26,6 +26,11 @@ class AnnotatedFactoryTest extends TestCase
                 'foo' => [
                     'bar' => 'Hello World',
                 ],
+                'dotted' => new \ArrayObject([
+                    'array' => new \ArrayObject([
+                        'access' => 'dotted array access',
+                    ], \ArrayObject::ARRAY_AS_PROPS),
+                ]),
             ],
             'dotted.service.which.is.not.array' => new \stdClass(),
         ]]);

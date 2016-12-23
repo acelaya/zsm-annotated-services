@@ -89,9 +89,9 @@ Then register another service which returns a `Doctrine\Common\Cache\Cache` inst
 
 By doing this, your annotations will be processed and cached, improving performance for subsequent requests.
 
-### Dot notation for array services
+### Dot notation for array or ArrayAccess services
 
-When you need to inject just one part of a service which contains an array, you can use the dot notation, where the first part is the service name and the rest of the parts are the keys to fetch from the array.
+When you need to inject just one part of a service which contains an array or ArrayAccess object, you can use the dot notation, where the first part is the service name and the rest of the parts are the keys to fetch from the array.
 
 For example, imagine this services specification:
 
@@ -140,4 +140,4 @@ class MyService
 }
 ```
 
-The injectable service is defined by **config.mail.from**. In this case, the `AnnotatedFactory` will assume that the service name is **config**, and that it contains an associative array. Then, it will use the rest of the dotted parts as nested keys in that array, and finally get the last value and inject it in the service.
+The injectable service is defined by **config.mail.from**. In this case, the `AnnotatedFactory` will assume that the service name is **config**, and that it contains an associative array or ArrayAccess object. Then, it will use the rest of the dotted parts as nested keys in that array, and finally get the last value and inject it in the service.
