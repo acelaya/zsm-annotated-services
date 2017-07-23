@@ -11,6 +11,8 @@ If you are tired of defining lots of factories in your projects just to fetch so
 
 It is a component that allows to define how dependency injection has to be performed with Zend\ServiceManager via annotations.
 
+> **Important!** While I will keep maintaining this project and providing bugfixes, I recommend you use the `ConfigAbstractFactory` instead, which is included in the ServiceManager package since v3.2.
+
 ### Installation
 
 Install this component with composer.
